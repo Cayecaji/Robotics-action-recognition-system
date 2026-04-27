@@ -5,10 +5,12 @@ import json
 import time
 import re
 import os
+import base64
 import rclpy
 import numpy as np
 
 from ollama import chat
+from ollama import Client
 from ollama import list as list_models
 from cv_bridge import CvBridge
 from rclpy.node import Node 
@@ -78,7 +80,6 @@ class ActionRecognitionNode(Node):
         self.ai_busy = False
         self.timeout_timer = None
         self.current_id = "No ID"
-        self.last_frame_time = self.get_clock().now()
         
 
         # --- Subcriptions and publishers ---
@@ -86,10 +87,13 @@ class ActionRecognitionNode(Node):
         self.id_subscriber    = self.create_subscription(String, '/person_id_match', self.id_callback, 1, callback_group=self.sensor_cb_group)
         self.action_publisher =   self.create_publisher(String, '/action_prediction', 1) 
 
+
+
         # --- Check if Ollama is available ---
         if not self.check_ollama_server():
             self.get_logger().fatal("Ollama server is not currently working. Shutting down node...")
             raise RuntimeError("Ollama Service Unavailable")
+           
 
         # --- Running node info ---
         self.get_logger().info("Core node running...")
@@ -145,6 +149,8 @@ class ActionRecognitionNode(Node):
                 if self.DEBUG_MODE: self.get_logger().info("Starting predictions, timer canceled.")
 
 
+            start_time = time.perf_counter()
+            if self.DEBUG_MODE :self.get_logger().info("Iniciating prediction timer (s)...")
             if self.DEBUG_MODE: self.get_logger().info("Predicting action of person with id["+ str(primary_id) + "].")
 
             self.ai_busy = True #Block incoming images
@@ -166,6 +172,12 @@ class ActionRecognitionNode(Node):
             frame_id_info = get_frame_id_info(self.id_match_list)
             updatedLVLMprompt = self.promptLVLM.replace("INPUT_LVLM", frame_id_info)
 
+
+            #Store images in variables instead of reading from drive
+            frame_list = [self.frame_to_base64(f) for f in self.predict_frames_list]
+
+            if self.DEBUG_MODE: self.debug_base64_image(frame_list)
+
             if(self.DEBUG_MODE): print(updatedLVLMprompt)
             print("------------------------------------------")
 
@@ -179,7 +191,7 @@ class ActionRecognitionNode(Node):
                     messages=[{
                         'role': 'user',
                         'content': updatedLVLMprompt,
-                        'images': [self.image_route_list[0], self.image_route_list[1], self.image_route_list[2], self.image_route_list[3], self.image_route_list[4]]
+                        'images': [self.image_route_list[0],self.image_route_list[1],self.image_route_list[2],self.image_route_list[3],self.image_route_list[4]]
                     }],
                     format = self.FORMAT,
                     options={
@@ -284,6 +296,14 @@ class ActionRecognitionNode(Node):
             if responseVoting.message.content == None:
                         self.error_empty_output(self.LLM_MODEL)
 
+
+
+            print("------------------------------------------")
+
+            end_time = time.perf_counter()
+            total_duration = end_time - start_time
+            self.get_logger().info(f"Full processing time: {total_duration:.3f}s.")
+
             print("------------------------------------------")
             print("Final prediction:")
            
@@ -362,6 +382,30 @@ class ActionRecognitionNode(Node):
         self.get_logger.info("The model " + model + " returned an empty message, aborting prediction...")
         self.reset_utils()
         return
+    
+    def frame_to_base64(self, frame):
+        _, buffer = cv2.imencode('.jpg', frame)
+        return base64.b64encode(buffer).decode('utf-8')
+    
+
+
+    def debug_base64_image(self, b64_list):
+        self.get_logger().info(f"Guardando {len(b64_list)} imágenes de debug desde Base64...")
+        for i, b64_string in enumerate(b64_list):
+            try:
+               
+                img_data = base64.b64decode(b64_string)
+                nparr = np.frombuffer(img_data, np.uint8)
+                img_check = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+                
+                if img_check is not None:
+                    debug_path = os.path.join(self.frames_route, f"debug_b64_frame_{i}.jpg")
+                    cv2.imwrite(debug_path, img_check)
+                else:
+                    self.get_logger().error(f"No se pudo decodificar la imagen de debug {i}")
+                    
+            except Exception as e:
+                self.get_logger().error(f"Error en debug_base64_image al procesar el frame {i}: {e}")
 
         
     def reset_utils(self):
