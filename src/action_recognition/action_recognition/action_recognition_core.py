@@ -159,7 +159,8 @@ class ActionRecognitionNode(Node):
                 self.timeout_timer.cancel()
                 if self.DEBUG_MODE: self.get_logger().info("Starting predictions, timer canceled.")
 
-
+            start_time = time.perf_counter()
+            if self.DEBUG_MODE :self.get_logger().info("Iniciating prediction timer (s)...")
             if self.DEBUG_MODE: self.get_logger().info("Predicting action of person with id["+ str(primary_id) + "].")
 
             self.ai_busy = True #Block incoming images
@@ -304,6 +305,11 @@ class ActionRecognitionNode(Node):
 
             if responseVoting.message.content == None:
                         self.error_empty_output(self.LLM_MODEL)
+
+            print("------------------------------------------")
+            end_time = time.perf_counter()
+            total_duration = end_time - start_time
+            self.get_logger().info(f"Full processing time: {total_duration:.3f}s.")      
 
             print("------------------------------------------")
             print("Final prediction:")
