@@ -1,0 +1,25 @@
+[0.881s] Invoking command in '/home/cayecaji/tfg/src/action_recognition': PYTHONPATH=/home/cayecaji/tfg/src/build/action_recognition/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/cayecaji/tfg/src/install/action_recognition/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/action_recognition build --build-base /home/cayecaji/tfg/src/build/action_recognition/build install --record /home/cayecaji/tfg/src/build/action_recognition/install.log --single-version-externally-managed install_data
+[1.003s] running egg_info
+[1.003s] writing ../build/action_recognition/action_recognition.egg-info/PKG-INFO
+[1.004s] writing dependency_links to ../build/action_recognition/action_recognition.egg-info/dependency_links.txt
+[1.004s] writing entry points to ../build/action_recognition/action_recognition.egg-info/entry_points.txt
+[1.004s] writing requirements to ../build/action_recognition/action_recognition.egg-info/requires.txt
+[1.004s] writing top-level names to ../build/action_recognition/action_recognition.egg-info/top_level.txt
+[1.005s] reading manifest file '../build/action_recognition/action_recognition.egg-info/SOURCES.txt'
+[1.006s] writing manifest file '../build/action_recognition/action_recognition.egg-info/SOURCES.txt'
+[1.006s] running build
+[1.006s] running build_py
+[1.006s] copying action_recognition/action_recognition_core.py -> /home/cayecaji/tfg/src/build/action_recognition/build/lib/action_recognition
+[1.010s] running install
+[1.010s] running install_lib
+[1.013s] copying /home/cayecaji/tfg/src/build/action_recognition/build/lib/action_recognition/action_recognition_core.py -> /home/cayecaji/tfg/src/install/action_recognition/lib/python3.10/site-packages/action_recognition
+[1.014s] byte-compiling /home/cayecaji/tfg/src/install/action_recognition/lib/python3.10/site-packages/action_recognition/action_recognition_core.py to action_recognition_core.cpython-310.pyc
+[1.017s] running install_data
+[1.017s] running install_egg_info
+[1.018s] removing '/home/cayecaji/tfg/src/install/action_recognition/lib/python3.10/site-packages/action_recognition-0.0.1-py3.10.egg-info' (and everything under it)
+[1.018s] Copying ../build/action_recognition/action_recognition.egg-info to /home/cayecaji/tfg/src/install/action_recognition/lib/python3.10/site-packages/action_recognition-0.0.1-py3.10.egg-info
+[1.021s] running install_scripts
+[1.032s] Installing action_recognition_core script to /home/cayecaji/tfg/src/install/action_recognition/lib/action_recognition
+[1.037s] Installing tracking_node script to /home/cayecaji/tfg/src/install/action_recognition/lib/action_recognition
+[1.037s] writing list of installed files to '/home/cayecaji/tfg/src/build/action_recognition/install.log'
+[1.046s] Invoked command in '/home/cayecaji/tfg/src/action_recognition' returned '0': PYTHONPATH=/home/cayecaji/tfg/src/build/action_recognition/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/cayecaji/tfg/src/install/action_recognition/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/action_recognition build --build-base /home/cayecaji/tfg/src/build/action_recognition/build install --record /home/cayecaji/tfg/src/build/action_recognition/install.log --single-version-externally-managed install_data

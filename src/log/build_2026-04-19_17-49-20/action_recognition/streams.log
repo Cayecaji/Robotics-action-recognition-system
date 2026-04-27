@@ -1,0 +1,23 @@
+[0.388s] Invoking command in '/home/cayecaji/tfg_edge__GPU/src/action_recognition': PYTHONPATH=/home/cayecaji/tfg_edge__GPU/src/build/action_recognition/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/cayecaji/tfg_edge__GPU/src/install/action_recognition/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/action_recognition build --build-base /home/cayecaji/tfg_edge__GPU/src/build/action_recognition/build install --record /home/cayecaji/tfg_edge__GPU/src/build/action_recognition/install.log --single-version-externally-managed install_data
+[0.523s] running egg_info
+[0.524s] writing ../build/action_recognition/action_recognition.egg-info/PKG-INFO
+[0.524s] writing dependency_links to ../build/action_recognition/action_recognition.egg-info/dependency_links.txt
+[0.524s] writing entry points to ../build/action_recognition/action_recognition.egg-info/entry_points.txt
+[0.524s] writing requirements to ../build/action_recognition/action_recognition.egg-info/requires.txt
+[0.524s] writing top-level names to ../build/action_recognition/action_recognition.egg-info/top_level.txt
+[0.525s] reading manifest file '../build/action_recognition/action_recognition.egg-info/SOURCES.txt'
+[0.525s] writing manifest file '../build/action_recognition/action_recognition.egg-info/SOURCES.txt'
+[0.526s] running build
+[0.526s] running build_py
+[0.526s] running install
+[0.526s] running install_lib
+[0.527s] running install_data
+[0.527s] running install_egg_info
+[0.528s] removing '/home/cayecaji/tfg_edge__GPU/src/install/action_recognition/lib/python3.10/site-packages/action_recognition-0.0.1-py3.10.egg-info' (and everything under it)
+[0.528s] Copying ../build/action_recognition/action_recognition.egg-info to /home/cayecaji/tfg_edge__GPU/src/install/action_recognition/lib/python3.10/site-packages/action_recognition-0.0.1-py3.10.egg-info
+[0.528s] running install_scripts
+[0.540s] Installing action_recognition_core script to /home/cayecaji/tfg_edge__GPU/src/install/action_recognition/lib/action_recognition
+[0.540s] Installing hri_node script to /home/cayecaji/tfg_edge__GPU/src/install/action_recognition/lib/action_recognition
+[0.541s] Installing tracking_node script to /home/cayecaji/tfg_edge__GPU/src/install/action_recognition/lib/action_recognition
+[0.541s] writing list of installed files to '/home/cayecaji/tfg_edge__GPU/src/build/action_recognition/install.log'
+[0.553s] Invoked command in '/home/cayecaji/tfg_edge__GPU/src/action_recognition' returned '0': PYTHONPATH=/home/cayecaji/tfg_edge__GPU/src/build/action_recognition/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/cayecaji/tfg_edge__GPU/src/install/action_recognition/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../build/action_recognition build --build-base /home/cayecaji/tfg_edge__GPU/src/build/action_recognition/build install --record /home/cayecaji/tfg_edge__GPU/src/build/action_recognition/install.log --single-version-externally-managed install_data

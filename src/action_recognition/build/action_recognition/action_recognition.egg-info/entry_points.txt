@@ -1,0 +1,3 @@
+[console_scripts]
+tracking_node = action_recognition.tracking_node:main
+

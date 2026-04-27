@@ -1,0 +1,27 @@
+running egg_info
+writing ../build/action_recognition/action_recognition.egg-info/PKG-INFO
+writing dependency_links to ../build/action_recognition/action_recognition.egg-info/dependency_links.txt
+writing entry points to ../build/action_recognition/action_recognition.egg-info/entry_points.txt
+writing requirements to ../build/action_recognition/action_recognition.egg-info/requires.txt
+writing top-level names to ../build/action_recognition/action_recognition.egg-info/top_level.txt
+reading manifest file '../build/action_recognition/action_recognition.egg-info/SOURCES.txt'
+writing manifest file '../build/action_recognition/action_recognition.egg-info/SOURCES.txt'
+running build
+running build_py
+copying action_recognition/action_recognition_core.py -> /home/cayecaji/tfg_edge__GPU/src/build/action_recognition/build/lib/action_recognition
+copying action_recognition/prompts/__init__.py -> /home/cayecaji/tfg_edge__GPU/src/build/action_recognition/build/lib/action_recognition/prompts
+running install
+running install_lib
+copying /home/cayecaji/tfg_edge__GPU/src/build/action_recognition/build/lib/action_recognition/prompts/__init__.py -> /home/cayecaji/tfg_edge__GPU/src/install/action_recognition/lib/python3.10/site-packages/action_recognition/prompts
+copying /home/cayecaji/tfg_edge__GPU/src/build/action_recognition/build/lib/action_recognition/action_recognition_core.py -> /home/cayecaji/tfg_edge__GPU/src/install/action_recognition/lib/python3.10/site-packages/action_recognition
+byte-compiling /home/cayecaji/tfg_edge__GPU/src/install/action_recognition/lib/python3.10/site-packages/action_recognition/prompts/__init__.py to __init__.cpython-310.pyc
+byte-compiling /home/cayecaji/tfg_edge__GPU/src/install/action_recognition/lib/python3.10/site-packages/action_recognition/action_recognition_core.py to action_recognition_core.cpython-310.pyc
+running install_data
+running install_egg_info
+removing '/home/cayecaji/tfg_edge__GPU/src/install/action_recognition/lib/python3.10/site-packages/action_recognition-0.0.1-py3.10.egg-info' (and everything under it)
+Copying ../build/action_recognition/action_recognition.egg-info to /home/cayecaji/tfg_edge__GPU/src/install/action_recognition/lib/python3.10/site-packages/action_recognition-0.0.1-py3.10.egg-info
+running install_scripts
+Installing action_recognition_core script to /home/cayecaji/tfg_edge__GPU/src/install/action_recognition/lib/action_recognition
+Installing hri_node script to /home/cayecaji/tfg_edge__GPU/src/install/action_recognition/lib/action_recognition
+Installing tracking_node script to /home/cayecaji/tfg_edge__GPU/src/install/action_recognition/lib/action_recognition
+writing list of installed files to '/home/cayecaji/tfg_edge__GPU/src/build/action_recognition/install.log'
