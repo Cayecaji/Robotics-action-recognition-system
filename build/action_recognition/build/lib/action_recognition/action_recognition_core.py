@@ -5,10 +5,12 @@ import json
 import time
 import re
 import os
+import base64
 import rclpy
 import numpy as np
 
 from ollama import chat
+from ollama import Client
 from ollama import list as list_models
 from cv_bridge import CvBridge
 from rclpy.node import Node 
@@ -68,6 +70,7 @@ class ActionRecognitionNode(Node):
 
         # --- Utils ---
         self.idle_timeout = self.declare_parameter('idle_timeout', 3.0).value
+        self.EXECUTION_ENVIROMENT = self.declare_parameter('execution_enviroment', "LOCAL").value
         self.predict_frames_list = []
         self.id_match_list = []
         self.image_route_list = []
@@ -78,7 +81,6 @@ class ActionRecognitionNode(Node):
         self.ai_busy = False
         self.timeout_timer = None
         self.current_id = "No ID"
-        self.last_frame_time = self.get_clock().now()
         
 
         # --- Subcriptions and publishers ---
@@ -86,10 +88,25 @@ class ActionRecognitionNode(Node):
         self.id_subscriber    = self.create_subscription(String, '/person_id_match', self.id_callback, 1, callback_group=self.sensor_cb_group)
         self.action_publisher =   self.create_publisher(String, '/action_prediction', 1) 
 
+
+        # --- Create route depending on the test we doing --- 
+        if self.EXECUTION_ENVIROMENT == "LOCAL": 
+            self.WS_ROUTE = 'http://localhost:11434' 
+        elif self.EXECUTION_ENVIROMENT == "EDGE":
+            self.WS_ROUTE = 'http://10.1.26.67:11434'
+        else: 
+            self.WS_ROUTE = 'http://10.2.26.241:11434'
+
+        # --- Create Ollama client to connect with edge ---
+        self.client = Client(host = self.WS_ROUTE)
+
         # --- Check if Ollama is available ---
-        if not self.check_ollama_server():
+        if not self.check_ollama_connection():
             self.get_logger().fatal("Ollama server is not currently working. Shutting down node...")
             raise RuntimeError("Ollama Service Unavailable")
+        
+        else: self.get_logger().info("Connection with Ollama and Edge was succesfully made.")
+        
 
         # --- Running node info ---
         self.get_logger().info("Core node running...")
@@ -144,7 +161,8 @@ class ActionRecognitionNode(Node):
                 self.timeout_timer.cancel()
                 if self.DEBUG_MODE: self.get_logger().info("Starting predictions, timer canceled.")
 
-
+            start_time = time.perf_counter()
+            if self.DEBUG_MODE :self.get_logger().info("Iniciating prediction timer (s)...")
             if self.DEBUG_MODE: self.get_logger().info("Predicting action of person with id["+ str(primary_id) + "].")
 
             self.ai_busy = True #Block incoming images
@@ -166,6 +184,12 @@ class ActionRecognitionNode(Node):
             frame_id_info = get_frame_id_info(self.id_match_list)
             updatedLVLMprompt = self.promptLVLM.replace("INPUT_LVLM", frame_id_info)
 
+
+            #Store images in variables instead of reading from drive
+            frame_list = [self.frame_to_base64(f) for f in self.predict_frames_list]
+
+            self.debug_base64_image(frame_list)
+
             if(self.DEBUG_MODE): print(updatedLVLMprompt)
             print("------------------------------------------")
 
@@ -174,12 +198,12 @@ class ActionRecognitionNode(Node):
             for n in range (self.nPrediccionesLVLM):
                 
                 print("(LVLM): Prediction", n+1, "in course...")
-                responseQwen = chat(
+                responseQwen = self.client.chat(
                     model= self.LVLM_MODEL,
                     messages=[{
                         'role': 'user',
                         'content': updatedLVLMprompt,
-                        'images': [self.image_route_list[0], self.image_route_list[1], self.image_route_list[2], self.image_route_list[3], self.image_route_list[4]]
+                        'images': [frame_list]
                     }],
                     format = self.FORMAT,
                     options={
@@ -225,7 +249,7 @@ class ActionRecognitionNode(Node):
             for n in range(self.nPrediccionesLLM):
 
                 print("(LLM): Prediction" ,n+1, "in course...")
-                responseLlava = chat(
+                responseLlava = self.client.chat(
                 model=self.LLM_MODEL,
                 messages=[{'role': 'user', 'content': promptLLM}],
 
@@ -259,7 +283,7 @@ class ActionRecognitionNode(Node):
             if(self.DEBUG_MODE): print(promptVote)
 
             print("(Voting Model): Predicting final decision...")
-            responseVoting = chat(
+            responseVoting = self.client.chat(
             model=self.LLM_MODEL,
             messages=[{'role': 'user', 'content': promptVote}],
 
@@ -283,6 +307,11 @@ class ActionRecognitionNode(Node):
 
             if responseVoting.message.content == None:
                         self.error_empty_output(self.LLM_MODEL)
+
+            print("------------------------------------------")
+            end_time = time.perf_counter()
+            total_duration = end_time - start_time
+            self.get_logger().info(f"Full processing time: {total_duration:.3f}s.")      
 
             print("------------------------------------------")
             print("Final prediction:")
@@ -319,13 +348,25 @@ class ActionRecognitionNode(Node):
             self.get_logger().error(f"Error processing JSON : {e}")
             return json.dumps({"accion_final": "unknown", "error": "fallo_en_parseo"})
         
-    def check_ollama_server(self):
+    def check_ollama_connection(self):
+        self.get_logger().info(f"Connecting to Ollama in URL: {self.WS_ROUTE}...")
+        
         try:
-            list_models()
-            self.get_logger().info("Conection established with Ollama server.")
+            response = self.client.list()
+            model_names = [m.model for m in response.models]
+            
+            if self.DEBUG_MODE : self.get_logger().info(f"Models available for use: {model_names}")
+            required_models = [self.LVLM_MODEL, self.LLM_MODEL]
+            for model in required_models:
+                if model not in model_names:
+                    self.get_logger().warning(f"Warning: Model {model} is not downloaded in edge.")
+                else:
+                    if self.DEBUG_MODE : self.get_logger().info(f"Model correctly running: {model}")
+
             return True
+
         except Exception as e:
-            self.get_logger().error(f"Couldn't connect to Ollama: {e}")
+            self.get_logger().fatal(f"Connection error due to edge: {e}")
             return False
         
 
@@ -362,6 +403,43 @@ class ActionRecognitionNode(Node):
         self.get_logger.info("The model " + model + " returned an empty message, aborting prediction...")
         self.reset_utils()
         return
+    
+    def frame_to_base64(self, frame):
+        # Codificamos el frame (imagen en memoria) a formato JPG
+        _, buffer = cv2.imencode('.jpg', frame)
+        # Lo convertimos a string Base64 que es lo que entiende la API
+        return base64.b64encode(buffer).decode('utf-8')
+    
+
+
+    def debug_base64_image(self, b64_list):
+        """
+        Decodifica una lista de strings Base64 y las guarda en disco para inspección.
+        """
+        self.get_logger().info(f"Guardando {len(b64_list)} imágenes de debug desde Base64...")
+        
+        for i, b64_string in enumerate(b64_list):
+            try:
+                # 1. Decodificar el string Base64 a bytes
+                img_data = base64.b64decode(b64_string)
+                
+                # 2. Convertir los bytes a un array de Numpy
+                nparr = np.frombuffer(img_data, np.uint8)
+                
+                # 3. Decodificar el array a una imagen de OpenCV
+                img_check = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+                
+                if img_check is not None:
+                    # 4. Construir la ruta (ej: /home/mapir/ar_images/debug_frame_0.jpg)
+                    debug_path = os.path.join(self.frames_route, f"debug_b64_frame_{i}.jpg")
+                    
+                    # 5. Guardar la imagen
+                    cv2.imwrite(debug_path, img_check)
+                else:
+                    self.get_logger().error(f"No se pudo decodificar la imagen de debug {i}")
+                    
+            except Exception as e:
+                self.get_logger().error(f"Error en debug_base64_image al procesar el frame {i}: {e}")
 
         
     def reset_utils(self):
