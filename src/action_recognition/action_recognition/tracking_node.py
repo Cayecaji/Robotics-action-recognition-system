@@ -24,7 +24,7 @@ class TrackingNode(Node):
 
         # --- Mode parameters ---
         self.mode = self.declare_parameter('mode', 'dataset').value
-        self.dataset_path = self.declare_parameter('dataset_path', '/home/cayecaji/categorized_videos/drinking').value
+        self.dataset_path = self.declare_parameter('dataset_path', '/home/cayecaji/categorized_videos/eating').value
         
          # --- Wait time between frames ---
         self.max_frames = self.declare_parameter('max_frames_per_video',5).value
@@ -141,7 +141,7 @@ class TrackingNode(Node):
                 frames_to_skip = 15 #Fallback value
                 
             self.get_logger().info(f"--- Video: {video_name} (FPS: {fps}, Analyzing 1 of every {frames_to_skip} frames) ---")
-            
+            time.sleep(2.0)
             sent_frames = 0
             frame_idx = 0
 
@@ -153,7 +153,7 @@ class TrackingNode(Node):
                 if frame_idx % frames_to_skip == 0:
                     if self.process_frame_logic(frame):
                         sent_frames += 1
-                        time.sleep(1.5)
+                        time.sleep(2.0)
 
                 frame_idx += 1
 

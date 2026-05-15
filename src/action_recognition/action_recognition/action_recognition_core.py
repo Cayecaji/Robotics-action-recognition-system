@@ -108,7 +108,6 @@ class ActionRecognitionNode(Node):
         #Check if action recognition is being processed
         if self.ai_busy:
             return
-        
         self.recognition_core(img_msg, self.current_id)
 
 
@@ -119,7 +118,7 @@ class ActionRecognitionNode(Node):
             self.target_id = id_msg
 
         #Check if we have enough frame and if person id of frame is valid
-        if(len(self.predict_frames_list) < 5 and id_msg == self.target_id ):
+        if(len(self.predict_frames_list) < 5):
             try:
                     frame = self.bridge.imgmsg_to_cv2(img_msg, "bgr8")
                     self.predict_frames_list.append(frame)
@@ -137,12 +136,12 @@ class ActionRecognitionNode(Node):
         if(len(self.predict_frames_list) == 5):
 
 
-            primary_id, id_consistency = self.validate_id_consistency()
+           # primary_id, id_consistency = self.validate_id_consistency()
 
-            if not id_consistency:
-                self.get_logger().error("Couldn't predict action due to ID inconsistency.")
-                self.reset_utils()
-                return
+            #if not id_consistency:
+            #    self.get_logger().error("Couldn't predict action due to ID inconsistency.")
+            #    self.reset_utils()
+            #    return
             
             if self.timeout_timer is not None:
                 self.timeout_timer.cancel()
@@ -318,7 +317,6 @@ class ActionRecognitionNode(Node):
 
             #Clear the lists and reset vars for other predictions
             self.reset_utils()
-
 
     # ---- Some useful functions ----
 
