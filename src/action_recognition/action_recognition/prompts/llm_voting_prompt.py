@@ -20,7 +20,7 @@ Debes contar con absoluta precisión. Si las 5 entradas son iguales, el resultad
 {
   "accion_final": "Nombre de la acción predominante",
   "conteo_votos": "X/5",
-  "justificacion_breve": "Objeto: [nombre], Acciones: [Escribe aquí las 5 palabras que has contado separadas por comas]"
+  "justificacion_breve": Acciones agrupadas: [Lista el grupo predominante elegido  ganador]"
 }
 
 [INSTRUCCIÓN FINAL]: 

@@ -42,8 +42,8 @@ class ActionRecognitionNode(Node):
         self.FORMAT     = self.declare_parameter('format', 'json').value
 
         #LVLM configuration
-        self.LVLM_TEMPERATURE = self.declare_parameter('lvlm_temperature', 0.1).value
-        self.LVLM_TOP_P       = self.declare_parameter('lvlm_top_p', 0.75).value
+        self.LVLM_TEMPERATURE = self.declare_parameter('lvlm_temperature', 0.7).value
+        self.LVLM_TOP_P       = self.declare_parameter('lvlm_top_p', 0.85).value
         self.LVLM_NUM_PREDICT = self.declare_parameter('lvlm_num_predict', 175).value
 
         #LLM configuration (Action prediction)
@@ -228,6 +228,9 @@ class ActionRecognitionNode(Node):
         #********OUT OF LOOP**********
 
             lvlm_predictions = get_scene_descriptions(self.json_files)
+            print("------------------------------------------")
+            self.get_logger().info("LVLM full predictions:\n" +lvlm_predictions)
+            print("------------------------------------------")
             promptLLM = self.promptLLM_SD.replace("INPUT_LLM", lvlm_predictions)
 
 
@@ -265,6 +268,9 @@ class ActionRecognitionNode(Node):
 
             #Get final predictions
             actions_predictions = get_action_predictions(self.final_actions)
+            print("------------------------------------------")
+            self.get_logger().info("LLM ACTION_PREDICT full predictions:\n" +actions_predictions)
+            print("------------------------------------------")
             promptVote = self.promptLLM_Voting.replace("INPUT_VOTING", actions_predictions)
 
             print("------------------------------------------")
@@ -311,9 +317,13 @@ class ActionRecognitionNode(Node):
             final_prediction = self.confidence_filter(responseVoting.message.content)
             print(final_prediction)
             
+            data   = json.loads(final_prediction)
+            accion = data.get("accion_final", "unknown")
+
+
             #Publish final prediction
             msg = String()
-            msg.data = final_prediction
+            msg.data = accion
             self.action_publisher.publish(msg)
 
             #Clear the lists and reset vars for other predictions

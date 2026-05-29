@@ -1,14 +1,9 @@
 #!/usr/bin/env python3
 
 import os
-import cv2
 import json
-import torch
 import time
-import re
-import edge_tts
 import asyncio
-import subprocess
 import rclpy
 import numpy as np
 from collections import deque
@@ -104,6 +99,32 @@ CLAVE_USUARIO
 
 RESPUESTA DE CAJI:
 """
+
+
+    #Prompt for iniciating conversation:
+
+        self.promptrobotInit = """ ### ROL
+Eres Caji, un robot asistente curioso y muy amable. Tu función es iniciar conversaciones de forma natural, utilizando lo que observas como un "rompehielo" para conectar con el usuario.
+
+### INSTRUCCIONES
+1. **ANALIZA LA ACCIÓN**: Observa qué está haciendo el usuario.
+2. **GENERA UN ROMPEHIELO**: Utiliza esa acción como pretexto para iniciar una interacción.
+3. **TONO**: Debes sonar cercano y espontáneo, nunca robótico ni descriptivo.
+
+### DATO DE ENTRADA
+- [ACCIÓN DETECTADA]: 
+CLAVE_ACCION_USUARIO
+
+### REGLAS DE ORO
+- Genera EXCLUSIVAMENTE el texto que dirás en voz alta.
+- Máximo 2 frases cortas.
+- NO describas la acción de forma clínica (evita decir "he detectado que estás...").
+- Enfócate en el usuario (ej: "¿Cómo te va con eso?", "¿Necesitas ayuda con...?", "¡Qué interesante lo que haces!").
+- NUNCA uses etiquetas de personaje ni introducciones.
+
+"""
+
+
     #Create timer and send to change mode function / also used to reset timer every time a robot-send text is published in topic
     def reset_idle_timer(self):
         
@@ -129,49 +150,11 @@ RESPUESTA DE CAJI:
             self.timeout_timer.cancel()
 
 
-    def speak(self, text):
-        async def save_audio():
-            clean_text = text.replace('*', '').replace('#', '').strip()
-            communicate = edge_tts.Communicate(clean_text, "es-ES-AlvaroNeural")
-            await communicate.save(self.audio_path)
-
-        try:
-            
-            if mixer.music.get_busy():
-                mixer.music.stop()
-            
-            mixer.music.unload()
-
-        
-            if os.path.exists(self.audio_path):
-                try:
-                    os.remove(self.audio_path)
-                    time.sleep(0.05) 
-                except OSError as e:
-                    self.get_logger().warn(f"No se pudo borrar el archivo: {e}")
-
-        
-            asyncio.run(save_audio())
-            
-            time.sleep(0.1) 
-
-            mixer.music.load(self.audio_path)
-            mixer.music.play()
-
-            while mixer.music.get_busy():
-                time.sleep(0.05)
-
-            mixer.music.unload()
-
-        except Exception as e:
-            self.get_logger().error(f"Error en speak: {e}")
-
     #Tracking model function
     def pasive_interaction(self,msg):
  
-        data   = json.loads(msg.data)
-        accion = data.get("accion_final", "sin accion") 
-
+        accion   = msg.data
+        
         if (len(self.actions) == 3): 
             self.actions.pop(0)
 
@@ -180,11 +163,22 @@ RESPUESTA DE CAJI:
         print("Acciones más actuales: ", self.actions)
 
         if self.MODE == "PASIVE":
-            robot_speach = "Hola, soy Caji, el robot inteligente, veo que has estado " + accion+ ", verdad?"
+            responseLlava = chat(
+                model=self.LLM_MODEL,
+                messages=[{'role': 'user', 'content': self.promptrobotInit}], 
+
+                options={
+                    'temperature': self.LLM_TEMPERATURE,  
+                    'top_p': self.LLM_TOP_P,
+                    'num_predict': self.LLM_NUM_PREDICT,
+                },
+            )
+
+            robot_speach = responseLlava.message.content
             actual_message = "[ROBOT]: " + robot_speach + "\n"
             self.CHAT_HISTORY += actual_message
             
-            self.get_logger().info("[ROBOT]: Hola soy Caji el robot inteligente, veo que has estado " + accion + ", verdad?")
+            self.get_logger().info("[ROBOT]:" + robot_speach)
             self.MODE = "ACTIVE"
             print("Actual mode: " + self.MODE)
 
