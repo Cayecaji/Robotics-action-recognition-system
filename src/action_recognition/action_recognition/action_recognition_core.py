@@ -44,17 +44,17 @@ class ActionRecognitionNode(Node):
         #LVLM configuration
         self.LVLM_TEMPERATURE = self.declare_parameter('lvlm_temperature', 0.7).value
         self.LVLM_TOP_P       = self.declare_parameter('lvlm_top_p', 0.85).value
-        self.LVLM_NUM_PREDICT = self.declare_parameter('lvlm_num_predict', 175).value
+        self.LVLM_NUM_PREDICT = self.declare_parameter('lvlm_length_predict', 175).value
 
         #LLM configuration (Action prediction)
         self.LLM_ACTION_TEMP        = self.declare_parameter('llm_action_temperature', 0.4).value
         self.LLM_ACTION_TOP_P       = self.declare_parameter('llm_action_top_p', 0.5).value
-        self.LLM_ACTION_NUM_PREDICT = self.declare_parameter('llm_action_num_predict', 175).value
+        self.LLM_ACTION_NUM_PREDICT = self.declare_parameter('llm_action_length_predict', 175).value
 
         #LLM configuration (Voting)
         self.LLM_VOTING_TEMP        = self.declare_parameter('llm_voting_temperature', 0.1).value
         self.LLM_VOTING_TOP_P       = self.declare_parameter('llm_voting_top_p', 0.5).value
-        self.LLM_VOTING_NUM_PREDICT = self.declare_parameter('llm_voting_num_predict', 175).value
+        self.LLM_VOTING_NUM_PREDICT = self.declare_parameter('llm_voting_length_predict', 175).value
 
         # --- MultiThread config ---
         self.sensor_cb_group = ReentrantCallbackGroup()

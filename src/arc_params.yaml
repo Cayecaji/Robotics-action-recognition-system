@@ -13,17 +13,17 @@ action_recognition_node:
     #LVLM Config
     lvlm_temperature: 0.7
     lvlm_top_p: 0.85
-    lvlm_num_predict: 175
+    lvlm_length_predict: 175
 
     #LLM Action predict config
     llm_action_temperature: 0.6
     llm_action_top_p: 0.5
-    llm_action_num_predict: 175
+    llm_action_length_predict: 175
 
     #LLM Voting config
     llm_voting_temperature: 0.1
     llm_voting_top_p: 0.5
-    llm_voting_num_predict: 175
+    llm_voting_length_predict: 175
 
     #Diverse control variables
     debugging: False
