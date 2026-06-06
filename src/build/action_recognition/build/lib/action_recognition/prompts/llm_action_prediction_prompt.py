@@ -1,18 +1,32 @@
-PROMPT_ACTION_PREDICTION = """[ROL]: EXPERTO EN CLASIFICADOR DE ACCIONES HUMANAS.
+PROMPT_ACTION_PREDICTION = """
+[ROL]: Sistema experto de síntesis y clasificación de acciones humanAS.
 
-        [TAREA]: Analiza los 3 análisis de video adjuntos y extrae una UNICA acción general que englobe el comportamiento. Responde únicamente en el formato JSON especificado, no respondas ni añadas ningún texto más.
-        [DATOS_DE_ENTRADA]:\n   """ + "INPUT_LLM" + """
+[TAREA]: 
+Analiza las 3 descripciones visuales proporcionadas por el módulo de visión inferior. Tu objetivo es encontrar el consenso entre las 3 predicciones y clasificar la acción global del sujeto.
 
+[DATOS_DE_ENTRADA]:
+"""  "INPUT_LLM"  """
 
-        [RESTRICCIONES]:
-        1. RESPONDER EXCLUSIVAMENTE EN FORMATO JSON VALIDO, No se debe incluir ningún tipo de texto extra. Utiliza exclusivamente comillas dobles estándar ASCII para JSON.
-        2. 'accion_final': DEBE tener entre 1 a 3 palabras como MAXIMO. DEBE derivarse directamente de las descripciones anteriores. EVITAR verbos genéricos como "HACER","PREPARAR","IR", "MOVER" y EVITAR sustantivos abstractos como "FLEXIBILIDAD", "MOVIMIENTO" entre otros.
-        3. 'Justifiación_breve': Debes describir en máximo 15 palabras qué objetos o acciones te han llevado a clasificar la 'accion_final' utilizando de manera OBLIGATORIA el formato: "Objeto:"..., "Acciones:"....
+[RESTRICCIONES]:
+1. Devuelve ÚNICAMENTE un objeto JSON válido. Cero texto fuera de las llaves.
+2. 'accion_final': DEBE tener entre 1 a 3 palabras como MAXIMO. 
+3. Utiliza el campo 'razonamiento_previo' para justificar tu decisión basándote en la mayoría (consenso) de las 3 predicciones de entrada.
+4. EVITAR verbos genéricos como "HACER","PREPARAR","IR", "MOVER" y EVITAR sustantivos abstractos como "FLEXIBILIDAD", "MOVIMIENTO" entre otros.
+5. EVITAR usar verbos en participio como BEBIDO o conjugaciones personales.
+5. Responde en ESPAÑOL CASTELLANO.
+6. 
 
-        [FORMATO_DE_SALIDA_EN_JSON]:
-        {
-        "accion_final": "...",
-        "confianza_prediccion": "muy_alta/alta/media/baja/muy_baja",
-        "justificacion_breve": "..."
-        }
-        """
+[EJEMPLO DE REFERENCIA]:
+{
+  "razonamiento_previo": "Dos de las predicciones indican que el sujeto levanta la mano mirando a la cámara, lo que indica un saludo. La tercera es dudosa.",
+  "accion_final": "saludando",
+  "confianza_prediccion": "alta"
+}
+
+[FORMATO_ESPERADO]:
+{
+  "razonamiento_previo": "Justificacon concisa en menos de 20 palabras.",
+  "accion_final": "prediccion_accion",
+  "confianza_prediccion": "muy_alta/alta/media/baja/muy_baja"
+}
+"""

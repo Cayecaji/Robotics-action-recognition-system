@@ -42,8 +42,8 @@ class ActionRecognitionNode(Node):
         self.FORMAT     = self.declare_parameter('format', 'json').value
 
         #LVLM configuration
-        self.LVLM_TEMPERATURE = self.declare_parameter('lvlm_temperature', 0.1).value
-        self.LVLM_TOP_P       = self.declare_parameter('lvlm_top_p', 0.75).value
+        self.LVLM_TEMPERATURE = self.declare_parameter('lvlm_temperature', 0.7).value
+        self.LVLM_TOP_P       = self.declare_parameter('lvlm_top_p', 0.85).value
         self.LVLM_NUM_PREDICT = self.declare_parameter('lvlm_num_predict', 175).value
 
         #LLM configuration (Action prediction)
@@ -75,6 +75,7 @@ class ActionRecognitionNode(Node):
         self.image_route_list = []
         self.json_files    = []
         self.final_actions = []
+        self.all_predictions = []
         self.id_count = 1
         self.frame_id = 1
         self.ai_busy = False
@@ -150,7 +151,7 @@ class ActionRecognitionNode(Node):
 
             start_time = time.perf_counter()
             if self.DEBUG_MODE :self.get_logger().info("Iniciating prediction timer (s)...")
-            if self.DEBUG_MODE: self.get_logger().info("Predicting action of person with id["+ str(primary_id) + "].")
+            #if self.DEBUG_MODE: self.get_logger().info("Predicting action of person with id["+ str(primary_id) + "].")
 
             self.ai_busy = True #Block incoming images
             self.id_count = 1
@@ -221,6 +222,7 @@ class ActionRecognitionNode(Node):
                     
                 #Prediction end
                 print(" Prediction" ,n+1 , "ended.")
+                
 
 
 
@@ -261,6 +263,7 @@ class ActionRecognitionNode(Node):
                     
                 #Prediction end
                 print(" Prediction", n+1 , "ended.")
+                print(responseLlava.message.content)
 
             #Get final predictions
             actions_predictions = get_action_predictions(self.final_actions)
@@ -309,7 +312,13 @@ class ActionRecognitionNode(Node):
 
             final_prediction = self.confidence_filter(responseVoting.message.content)
             print(final_prediction)
-            
+
+            data   = json.loads(final_prediction)
+            action = data.get("accion_final", "unknown")
+            self.all_predictions.append(action)
+            print("------------------------------------------")
+            print("Predictions made so far: ", self.all_predictions)
+            print("------------------------------------------")
             #Publish final prediction
             msg = String()
             msg.data = final_prediction

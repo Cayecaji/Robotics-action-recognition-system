@@ -24,7 +24,7 @@ class TrackingNode(Node):
 
         # --- Mode parameters ---
         self.mode = self.declare_parameter('mode', 'dataset').value
-        self.dataset_path = self.declare_parameter('dataset_path', '/home/cayecaji/categorized_videos/eating').value
+        self.dataset_path = self.declare_parameter('dataset_path', '/home/cayecaji/CCTV_01').value
         
          # --- Wait time between frames ---
         self.max_frames = self.declare_parameter('max_frames_per_video',5).value
@@ -32,8 +32,8 @@ class TrackingNode(Node):
 
         
         # --- YOLO parameters ---
-        self.MODEL = self.declare_parameter('yolo_model',"yolov8m.pt").value 
-        self.CONFIDENCE = self.declare_parameter('confidence',0.75).value
+        self.MODEL = self.declare_parameter('yolo_model',"yolov8s.pt").value 
+        self.CONFIDENCE = self.declare_parameter('confidence',0.2).value
         self.CLASSES = self.declare_parameter('classes',[0]).value
         self.TRACKER = self.declare_parameter('tracker',"bytetrack.yaml").value
         self.PERSIST = self.declare_parameter('persist',True).value
@@ -84,15 +84,17 @@ class TrackingNode(Node):
 
         tracking_results = self.model.track(frame, persist=self.PERSIST, tracker=self.TRACKER, classes= self.CLASSES,
                                                  conf= self.CONFIDENCE, iou=self.IOU, verbose=self.VERBOSE)
+        
+       
 
         if tracking_results[0].boxes is not None and len(tracking_results[0].boxes) > 0 and tracking_results[0].boxes.id is not None:
                 #if tracking_results[0].boxes.id is not None: ¿?
 
                 #boundingbox_frame = tracking_results[0].plot()  Just in case we need to check the bounding boxes
 
-
+            boundingbox_frame = tracking_results[0].plot()
             num_persons = len(tracking_results[0].boxes)
-            out_image_msg = self.bridge.cv2_to_imgmsg(original_frame, "bgr8") #Transform again into ROS2 image.  
+            out_image_msg = self.bridge.cv2_to_imgmsg(boundingbox_frame, "bgr8") #Transform again into ROS2 image.  
 
 
             if(num_persons == 1):
@@ -110,10 +112,6 @@ class TrackingNode(Node):
             info_msg = "Frame sent to /detected_person_image : " + str(num_persons) + " person/persons detected with id"+ str(tracking_results[0].boxes.id.int().cpu().tolist()) + "."
             self.get_logger().info(info_msg)
 
-
-            #Empty cache so node doesnt explode
-            del tracking_results
-            torch.cuda.empty_cache()       
             return True
         return False     
 
@@ -135,26 +133,17 @@ class TrackingNode(Node):
             if fps == 0:
                 fps = 30.0 # Fallback value
                 
-            # Analyze image every 15 frames
-            frames_to_skip = int(fps * 0.5)
-            if frames_to_skip == 0:
-                frames_to_skip = 15 #Fallback value
-                
-            self.get_logger().info(f"--- Video: {video_name} (FPS: {fps}, Analyzing 1 of every {frames_to_skip} frames) ---")
+           
+            self.get_logger().info(f"--- Video: {video_name} (FPS: {fps}) ---")
             time.sleep(2.0)
-            sent_frames = 0
             frame_idx = 0
 
-            while cap.isOpened() and sent_frames < self.max_frames:
+            while cap.isOpened():
                 ret, frame = cap.read()
                 if not ret:
                     break
 
-                if frame_idx % frames_to_skip == 0:
-                    if self.process_frame_logic(frame):
-                        sent_frames += 1
-                        time.sleep(2.0)
-
+                self.process_frame_logic(frame)
                 frame_idx += 1
 
             cap.release()
