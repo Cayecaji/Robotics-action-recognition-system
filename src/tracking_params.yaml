@@ -1,0 +1,22 @@
+tracking_node:
+  ros__parameters:
+    mode: "dataset"
+    dataset_path: "/home/cayecaji/categorized_videos/drinking"
+
+    # --- YOLO config ---
+    yolo_model: "yolov8m.pt"
+    confidence: 0.75
+    iou: 0.45
+    classes: [0] 
+    persist: True
+    tracker: "bytetrack.yaml"
+    verbose: False
+
+    # --- Frame control variables ---
+    wait_time: 5 
+    max_frames_per_video: 5 
+    delay_between_videos: 30 
+
+    # --- Pre-processing of image ---
+    contrast: 1.2
+    brightness: 80
