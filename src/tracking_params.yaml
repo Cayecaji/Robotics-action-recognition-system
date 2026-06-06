@@ -10,7 +10,7 @@ tracking_node:
 
     # --- YOLO parameters ---
     yolo_model: "yolov8s.pt"
-    confidence: 0.75
+    confidence: 0.4
     classes: [0]
     tracker: "bytetrack.yaml"
     persist: true
