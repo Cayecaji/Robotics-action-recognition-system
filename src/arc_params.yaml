@@ -1,8 +1,8 @@
 action_recognition_node:
   ros__parameters:
     frames_route: "/home/cayecaji/image_frames"
-    n_predicciones_lvlm: 3
-    n_predicciones_llm: 5
+    n_predicciones_lvlm: 5
+    n_predicciones_llm: 7
     idle_timeout: 5.0
 
     #Model selection
@@ -11,7 +11,7 @@ action_recognition_node:
     format: "json"
 
     #LVLM Config
-    lvlm_temperature: 0.1
+    lvlm_temperature: 0.7
     lvlm_top_p: 0.75
     lvlm_num_predict: 175
 
