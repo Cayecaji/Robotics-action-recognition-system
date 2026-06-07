@@ -121,7 +121,7 @@ RESPUESTA DE CAJI:
         self.get_logger().info("Tiempo de espera agotado. Volviendo a modo PASIVE.")
         self.MODE = "PASIVE"
         
-        # Clean chat history could be good?
+        # Clean chat history could be good
         self.CHAT_HISTORY = "" 
         
         
@@ -180,11 +180,11 @@ RESPUESTA DE CAJI:
         print("Acciones más actuales: ", self.actions)
 
         if self.MODE == "PASIVE":
-            robot_speach = "Hola, soy Caji, el robot inteligente, veo que has estado " + accion+ ", verdad?"
+            robot_speach = "Hola, soy Caji, el robot inteligente, veo que has estado haciendo la acción de: " + accion+ ", verdad?"
             actual_message = "[ROBOT]: " + robot_speach + "\n"
             self.CHAT_HISTORY += actual_message
             
-            self.get_logger().info("[ROBOT]: Hola soy Caji el robot inteligente, veo que has estado " + accion + ", verdad?")
+            self.get_logger().info("[ROBOT]: Hola soy Caji el robot inteligente, veo que has estado haciendo la acción de: " + accion + ", verdad?")
             self.MODE = "ACTIVE"
             print("Actual mode: " + self.MODE)
 
