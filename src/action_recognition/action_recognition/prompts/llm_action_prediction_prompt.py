@@ -14,7 +14,6 @@ Analiza las 3 descripciones visuales proporcionadas por el módulo de visión in
 4. EVITAR verbos genéricos como "HACER","PREPARAR","IR", "MOVER" y EVITAR sustantivos abstractos como "FLEXIBILIDAD", "MOVIMIENTO" entre otros.
 5. EVITAR usar verbos en participio como BEBIDO o conjugaciones personales.
 5. Responde en ESPAÑOL CASTELLANO.
-6. 
 
 [EJEMPLO DE REFERENCIA]:
 {
@@ -25,7 +24,7 @@ Analiza las 3 descripciones visuales proporcionadas por el módulo de visión in
 
 [FORMATO_ESPERADO]:
 {
-  "razonamiento_previo": "Justificacon concisa en menos de 20 palabras.",
+  "razonamiento_previo": "Justificacion concisa en menos de 20 palabras.",
   "accion_final": "prediccion_accion",
   "confianza_prediccion": "muy_alta/alta/media/baja/muy_baja"
 }
