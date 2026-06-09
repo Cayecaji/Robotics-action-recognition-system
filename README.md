@@ -27,7 +27,7 @@ robotics-action-recognition-system/
 ├── src/                # Source code
 ├── build/              # ROS2 build artifacts
 ├── install/            # Installation artifacts
-├── log/                # Execution logs
+├── log/                # Execution logs 
 └── ...
 ---------------------------------------------------
 robotics-action-recognition-system/src
@@ -35,6 +35,7 @@ robotics-action-recognition-system/src
 ├── action_recognition/  # Nodes and requirements
 ├── arc_params.yaml      # HAR config. file
 ├── tracking_params.yaml # Tracking config. file
+├── prompts/             # Prompts used for system
 ├── yolov8s.pt           # Selected YOLO model
 └── ...
 ```
