@@ -32,7 +32,7 @@ class ActionRecognitionNode(Node):
        # --- Params read from .yaml ---
         
         # Routes and predictions for models
-        self.frames_route = self.declare_parameter('frames_route', '/home/cayecaji/image_frames').value
+        self.frames_route = self.declare_parameter('frames_route', '/robotics-action-recognition-system/image_frames').value
         self.nPrediccionesLVLM = self.declare_parameter('n_predicciones_lvlm', 3).value
         self.nPrediccionesLLM = self.declare_parameter('n_predicciones_llm', 5).value
 
@@ -151,7 +151,6 @@ class ActionRecognitionNode(Node):
 
             start_time = time.perf_counter()
             if self.DEBUG_MODE :self.get_logger().info("Iniciating prediction timer (s)...")
-            #if self.DEBUG_MODE: self.get_logger().info("Predicting action of person with id["+ str(primary_id) + "].")
 
             self.ai_busy = True #Block incoming images
             self.id_count = 1
@@ -263,7 +262,6 @@ class ActionRecognitionNode(Node):
                     
                 #Prediction end
                 print(" Prediction", n+1 , "ended.")
-                print(responseLlava.message.content)
 
             #Get final predictions
             actions_predictions = get_action_predictions(self.final_actions)
@@ -319,6 +317,7 @@ class ActionRecognitionNode(Node):
             print("------------------------------------------")
             print("Predictions made so far: ", self.all_predictions)
             print("------------------------------------------")
+
             #Publish final prediction
             msg = String()
             msg.data = final_prediction
@@ -430,7 +429,6 @@ class ActionRecognitionNode(Node):
 
 
 # ---- Some getters ----
-
 def get_frame_id_info(id_info):
     frame_info_index = 1
     result = ""

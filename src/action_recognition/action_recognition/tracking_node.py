@@ -24,7 +24,7 @@ class TrackingNode(Node):
 
         # --- Mode parameters ---
         self.mode = self.declare_parameter('mode', 'dataset').value
-        self.dataset_path = self.declare_parameter('dataset_path', '/home/cayecaji/CCTV_01').value
+        self.dataset_path = self.declare_parameter('dataset_path', '/robotics-action-recognition-system/test').value
         
          # --- Wait time between frames ---
         self.max_frames = self.declare_parameter('max_frames_per_video',5).value
@@ -33,7 +33,7 @@ class TrackingNode(Node):
         
         # --- YOLO parameters ---
         self.MODEL = self.declare_parameter('yolo_model',"yolov8s.pt").value 
-        self.CONFIDENCE = self.declare_parameter('confidence',0.2).value
+        self.CONFIDENCE = self.declare_parameter('confidence',0.4).value
         self.CLASSES = self.declare_parameter('classes',[0]).value
         self.TRACKER = self.declare_parameter('tracker',"bytetrack.yaml").value
         self.PERSIST = self.declare_parameter('persist',True).value
@@ -76,8 +76,6 @@ class TrackingNode(Node):
             
 
     def process_frame_logic(self, frame):       
-        #Pre-process the image
-        #frame = cv2.convertScaleAbs(frame, alpha=self.CONTRAST, beta=self.BRIGHTNESS)
 
         #Make a copy of the frame so we can send it without bounding boxes
         original_frame = frame.copy()
@@ -86,9 +84,7 @@ class TrackingNode(Node):
                                                  conf= self.CONFIDENCE, iou=self.IOU, verbose=self.VERBOSE)
         
        
-
         if tracking_results[0].boxes is not None and len(tracking_results[0].boxes) > 0 and tracking_results[0].boxes.id is not None:
-                #if tracking_results[0].boxes.id is not None: ¿?
 
                 #boundingbox_frame = tracking_results[0].plot()  Just in case we need to check the bounding boxes
 
