@@ -24,7 +24,7 @@ class TrackingNode(Node):
 
         # --- Mode parameters ---
         self.mode = self.declare_parameter('mode', 'dataset').value
-        self.dataset_path = self.declare_parameter('dataset_path', '/home/cayecaji/categorized_videos/eating').value
+        self.dataset_path = self.declare_parameter('dataset_path', 'src/action_recognition/test/dataset').value
         
          # --- Wait time between frames ---
         self.max_frames = self.declare_parameter('max_frames_per_video',5).value
@@ -32,8 +32,8 @@ class TrackingNode(Node):
 
         
         # --- YOLO parameters ---
-        self.MODEL = self.declare_parameter('yolo_model',"yolov8m.pt").value 
-        self.CONFIDENCE = self.declare_parameter('confidence',0.75).value
+        self.MODEL = self.declare_parameter('yolo_model',"yolov8s.pt").value 
+        self.CONFIDENCE = self.declare_parameter('confidence',0.4).value
         self.CLASSES = self.declare_parameter('classes',[0]).value
         self.TRACKER = self.declare_parameter('tracker',"bytetrack.yaml").value
         self.PERSIST = self.declare_parameter('persist',True).value
@@ -86,7 +86,6 @@ class TrackingNode(Node):
                                                  conf= self.CONFIDENCE, iou=self.IOU, verbose=self.VERBOSE)
 
         if tracking_results[0].boxes is not None and len(tracking_results[0].boxes) > 0 and tracking_results[0].boxes.id is not None:
-                #if tracking_results[0].boxes.id is not None: ¿?
 
                 #boundingbox_frame = tracking_results[0].plot()  Just in case we need to check the bounding boxes
 
@@ -110,10 +109,6 @@ class TrackingNode(Node):
             info_msg = "Frame sent to /detected_person_image : " + str(num_persons) + " person/persons detected with id"+ str(tracking_results[0].boxes.id.int().cpu().tolist()) + "."
             self.get_logger().info(info_msg)
 
-
-            #Empty cache so node doesnt explode
-            del tracking_results
-            torch.cuda.empty_cache()       
             return True
         return False     
 

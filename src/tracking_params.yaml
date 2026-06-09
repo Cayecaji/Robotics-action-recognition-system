@@ -1,0 +1,18 @@
+tracking_node:
+  ros__parameters:
+    # --- Mode parameters ---
+    mode: "dataset"
+    dataset_path: "src/action_recognition/test/dataset"
+    
+    # --- Wait time between frames ---
+    max_frames_per_video: 5
+    delay_between_videos: 30
+
+    # --- YOLO parameters ---
+    yolo_model: "yolov8s.pt"
+    confidence: 0.4
+    classes: [0]
+    tracker: "bytetrack.yaml"
+    persist: true
+    iou: 0.45
+    verbose: false

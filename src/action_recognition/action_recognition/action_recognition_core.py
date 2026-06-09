@@ -10,7 +10,6 @@ import rclpy
 import numpy as np
 
 from ollama import chat
-from ollama import Client
 from ollama import list as list_models
 from cv_bridge import CvBridge
 from rclpy.node import Node 
@@ -32,7 +31,7 @@ class ActionRecognitionNode(Node):
        # --- Params read from .yaml ---
         
         # Routes and predictions for models
-        self.frames_route = self.declare_parameter('frames_route', '/home/cayecaji/image_frames').value
+        self.frames_route = self.declare_parameter('frames_route', 'src/action_recognition/image_frames').value
         self.nPrediccionesLVLM = self.declare_parameter('n_predicciones_lvlm', 3).value
         self.nPrediccionesLLM = self.declare_parameter('n_predicciones_llm', 5).value
 
@@ -42,8 +41,8 @@ class ActionRecognitionNode(Node):
         self.FORMAT     = self.declare_parameter('format', 'json').value
 
         #LVLM configuration
-        self.LVLM_TEMPERATURE = self.declare_parameter('lvlm_temperature', 0.1).value
-        self.LVLM_TOP_P       = self.declare_parameter('lvlm_top_p', 0.75).value
+        self.LVLM_TEMPERATURE = self.declare_parameter('lvlm_temperature', 0.7).value
+        self.LVLM_TOP_P       = self.declare_parameter('lvlm_top_p', 0.85).value
         self.LVLM_NUM_PREDICT = self.declare_parameter('lvlm_num_predict', 175).value
 
         #LLM configuration (Action prediction)
