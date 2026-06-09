@@ -2,7 +2,7 @@ tracking_node:
   ros__parameters:
     # --- Mode parameters ---
     mode: "dataset"
-    dataset_path: "/home/cayecaji/CCTV_01"
+    dataset_path: "/robotics-action-recognition-system/test/dataset"
     
     # --- Wait time between frames ---
     max_frames_per_video: 5

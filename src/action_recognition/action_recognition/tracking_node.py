@@ -24,7 +24,7 @@ class TrackingNode(Node):
 
         # --- Mode parameters ---
         self.mode = self.declare_parameter('mode', 'dataset').value
-        self.dataset_path = self.declare_parameter('dataset_path', '/robotics-action-recognition-system/test').value
+        self.dataset_path = self.declare_parameter('dataset_path', '/robotics-action-recognition-system/test/dataset').value
         
          # --- Wait time between frames ---
         self.max_frames = self.declare_parameter('max_frames_per_video',5).value
