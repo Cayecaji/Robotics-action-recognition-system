@@ -153,9 +153,8 @@ CLAVE_ACCION_USUARIO
     #Tracking model function
     def pasive_interaction(self,msg):
  
-        data   = json.loads(msg.data)
-        accion = data.get("accion_final", "sin accion") 
-
+        accion   = msg.data
+        
         if (len(self.actions) == 3): 
             self.actions.pop(0)
 

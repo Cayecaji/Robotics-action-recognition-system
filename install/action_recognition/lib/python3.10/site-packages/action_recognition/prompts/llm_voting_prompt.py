@@ -1,30 +1,21 @@
 PROMPT_VOTING = """
-[ROL]: EXPERTO EN LÓGICA Y CONSOLIDACIÓN DE DATOS.
+[ROL]: Sistema de resolución de consenso y agrupación semántica.
 
 [TAREA]: 
-Analiza las 5 predicciones de entrada para determinar la acción final por mayoría.
-Debes contar con absoluta precisión. Si las 5 entradas son iguales, el resultado DEBE ser 5/5.
+Analiza las 5 predicciones de acción proporcionadas. Tu objetivo es encontrar la acción mayoritaria agrupando aquellas que signifiquen lo mismo, aunque estén escritas de forma distinta.
 
-[DATOS_DE_ENTRADA]:\n """ + "INPUT_VOTING" + """
+[DATOS_DE_ENTRADA]: \n
+""" "INPUT_VOTING" """
 
-[RESTRICCIONES]:
-- Si no hay una acción clara, pon "unknown" en accion_final.
+[RESTRICCIONES CRÍTICAS]:
+1. RESPUESTA ESTRICTA EN JSON.
+2. Agrupa variaciones semánticas (ej: "Beber", "Bebiendo", "Tomando bebida" cuentan todas para el mismo concepto).
+3. El campo 'accion_final' DEBE ser el verbo en infinitivo de la acción ganadora (ej: "beber", "caminar", "saludar").
 
-[REGLAS CRÍTICAS DE CONTEO]:
-- PASO 1: Lista mentalmente cada entrada.
-- PASO 2: Agrupa las acciones que signifiquen semánticamente lo mismo.
-- PASO 3: Cuenta el total del grupo de votos más grande.
-- PASO 4: Responde ÚNICAMENTE en JSON.
-
-[FORMATO_DE_SALIDA_JSON]:
+[FORMATO_ESPERADO]:
 {
-  "accion_final": "Nombre de la acción predominante",
-  "conteo_votos": "X/5",
-  "justificacion_breve": Acciones agrupadas: [Lista el grupo predominante elegido  ganador]"
+"accion_final": "Nombre de la acción predominante",
+"conteo_votos": "X/5",
+"justificacion_breve": "Acciones agrupadas: [Lista los grupos semánticamente similares agrupados en “conteo_votos”]"
 }
-
-[INSTRUCCIÓN FINAL]: 
-No añadas texto antes ni después del JSON. Si ves 5 elementos iguales, escribe "5/5" en el conteo.
-
-JSON:
 """

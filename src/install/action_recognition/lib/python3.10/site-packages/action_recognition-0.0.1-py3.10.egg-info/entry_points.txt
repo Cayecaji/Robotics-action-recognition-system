@@ -1,5 +1,0 @@
-[console_scripts]
-action_recognition_core = action_recognition.action_recognition_core:main
-hri_node = action_recognition.hri_node:main
-tracking_node = action_recognition.tracking_node:main
-

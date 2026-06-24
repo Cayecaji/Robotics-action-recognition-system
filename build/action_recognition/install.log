@@ -16,7 +16,8 @@
 /home/cayecaji/tfg_edge__GPU/install/action_recognition/lib/python3.10/site-packages/action_recognition/prompts/__pycache__/__init__.cpython-310.pyc
 /home/cayecaji/tfg_edge__GPU/install/action_recognition/share/ament_index/resource_index/packages/action_recognition
 /home/cayecaji/tfg_edge__GPU/install/action_recognition/share/action_recognition/package.xml
-/home/cayecaji/tfg_edge__GPU/install/action_recognition/share/action_recognition/launch
+/home/cayecaji/tfg_edge__GPU/install/action_recognition/share/action_recognition/launch/action_recognition_launch.py
+/home/cayecaji/tfg_edge__GPU/install/action_recognition/share/action_recognition/config
 /home/cayecaji/tfg_edge__GPU/install/action_recognition/lib/python3.10/site-packages/action_recognition-0.0.1-py3.10.egg-info/entry_points.txt
 /home/cayecaji/tfg_edge__GPU/install/action_recognition/lib/python3.10/site-packages/action_recognition-0.0.1-py3.10.egg-info/requires.txt
 /home/cayecaji/tfg_edge__GPU/install/action_recognition/lib/python3.10/site-packages/action_recognition-0.0.1-py3.10.egg-info/SOURCES.txt

@@ -16,6 +16,7 @@ action_recognition/prompts/__init__.py
 action_recognition/prompts/llm_action_prediction_prompt.py
 action_recognition/prompts/llm_voting_prompt.py
 action_recognition/prompts/lvlm_scene_description_prompt.py
+launch/action_recognition_launch.py
 resource/action_recognition
 test/test_copyright.py
 test/test_flake8.py
